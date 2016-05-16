@@ -1,0 +1,8 @@
+First began testing with MAX_ITEMS=1 with 100 iterations. This means there can be at most one item in the pool at a time and a producer must wait for a consumer to remove an item before producing another. Because there are 2 producers and 2 consumers, a total off 200 items are inserted over the course of the program, and then removed. Moreover, we would expect a total of 400 accesses to the item pool. This gave the result
+
+    items 0 count 200
+    items 1 count 200
+    Total: 400
+which is as expected.
+
+We then began testing with MAX_ITEMS=10 and slowly scaled from 100 iterations to 1 million iterations. The histogram represents how many times there were X items in the pool, and their sum should the total number of accesses to the pool. With 2 producers and 2 consumers, this should always be some multiple of 4. So for 1 million iterations, we should expect a total of 4 million accesses. This is the result obtained.

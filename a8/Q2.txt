@@ -1,0 +1,11 @@
+sRead
+  N=10: .11s
+  N=100 1.0s
+  N=1000 10.0s
+
+aRead
+  N=10: .016s
+  N=100: .015s
+  N=1000 .017s
+
+We see that asynchronously reading data from disk is clearning better that sRead. This is because sRead operates sequentially: request a block of memory, wait for it to load, then check the block of memory. While it waits for disk to load memory, however, the CPU is doing nothing (if using actual disk). Asynchronous read, however, instead uses this downtime to to process more requests and waits until the disk sends an interrupt, notifying it that a disk read has completed. Only then does it prcoess the data itself. The advantage of doing this is that there is less downtime for the CPU. This is because making a request to the disk is fast, but loading the data into a buffer is slower.

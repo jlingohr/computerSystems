@@ -1,0 +1,55 @@
+Threading is faster than sRead but slower than asynchronous read. It is expected to be faster than sRead because we are now utilizing more than one thread and so can do more work at once. So while we wait for disk to load data into buffer, we can pass off the CPU to another thread to do whatever it needs and come back to were we were later. For large N, we observe that the running time is ~1/4 that of sRead, which is to be expected since we run 4 threads in parallel.
+
+Threading is slower than asynchronous read for larger values of N. When N is low, however, it is as fast. This is because we are running 4 threads, which can handle 10 reads very well. We notice, importantly, that the system time is ~4x the system time of asynchronous read, which utilizes only a single thread. As N gets larger, however, threading becomes much slower than asynchronous read. This is because we are limited to 4 threads to handle N=1000. What happens is that the 4 running threads can each make their requests quickly, but then must wait for the disk (which also operates in parallel). Instead of just waiting, however, they pass off the CPU to another thread, but first have to save their registers. This creates extra overhead inbetween switching threads. The result of this extra overhead is slower requests to disk and significantly increased system running time.
+
+sRead:
+
+10
+real  0m0.110s
+user  0m0.105s
+sys 0m0.003s
+
+100
+real  0m1.083s
+user  0m1.057s
+sys 0m0.016s
+
+1000
+real  0m10.747s
+user  0m10.519s
+sys 0m0.146s
+
+aRead:
+
+10
+real  0m0.016s
+user  0m0.011s
+sys 0m0.003s
+
+100
+real  0m0.017s
+user  0m0.012s
+sys 0m0.003s
+
+1000
+real  0m0.018s
+user  0m0.012s
+sys 0m0.004s
+
+tRead
+
+10
+real  0m0.018s
+user  0m0.005s
+sys 0m0.012s
+
+100
+real  0m0.037s
+user  0m0.006s
+sys 0m0.030s
+
+1000
+real  0m0.229s
+user  0m0.012s
+sys 0m0.214s
+

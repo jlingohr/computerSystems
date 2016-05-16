@@ -1,0 +1,9 @@
+
+We are told each disk read takes about 10^(-3) seconds, or 10ms. Since sRead loads blocks of data into memory sequentially, we would expect the running time to be linear in the number of blocks requested. So reading 10 blocks of memory should take 100ms, reading 100 blocks should take 1 second, and reading 1000 blocks into memory should take 10 seconds. The result we get:
+
+sRead
+  N=10: .11s
+  N=100 1.0s
+  N=1000 10.0s
+
+So everything works as expected.

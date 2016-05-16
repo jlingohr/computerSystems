@@ -1,0 +1,40 @@
+The waiting histograms are
+
+washroom:
+  Number of times people waited for 1 person to enter: 4
+  Number of times people waited for 2 people to enter: 1
+  Number of times people waited for 3 people to enter: 1
+  Number of times people waited for 6 people to enter: 1
+  Number of times people waited for 7 people to enter: 1
+  Number of times people waited for 8 people to enter: 2
+  Number of times people waited for 9 people to enter: 2
+  Number of times people waited for 10 people to enter: 1
+  Number of times people waited for 11 people to enter: 331
+  Number of times people waited for 12 people to enter: 331
+  Number of times people waited for 13 people to enter: 1
+  Number of times people waited for 15 people to enter: 1
+  Number of times people waited for 16 people to enter: 2
+  Number of times people waited for 17 people to enter: 332
+  Number of times people waited for 18 people to enter: 330
+  Number of times people waited for 19 people to enter: 659
+
+washroom_sem:
+  Number of times people waited for 0 people to enter: 2100
+  Number of times people waited for 1 person to enter: 100
+
+We see that ensuring fairness using mutexes and condition variables can be harder
+than using semaphores. Specifically, when we use mutexes and condition variables,
+users tend to wait a lot longer than when we use semaphores. This occurs because
+using semaphores imposes a strict order on which locks can be obtained and under
+what conditions. When a thread is woken up from a signal and continues its program,
+any assumptions we make about the programs state are necessarily true. Moreover,
+semaphores allow us to be more specific as to which threads are signalled: the threads
+that have made it to a specific point in the program. As a result, there appears
+to be less race conditions.
+
+However, this is not so when we use mutexes and condition variables. When a thread is woken
+from a signal, the thread must then check that our assumptions are true by first
+spinning for a lock and continually checking the conditions. The consequence is that
+there is more opportunity for threads to race towards acquiring a lock, and more threads
+creates more competitors. Because these threads are continually waiting and being awoken,
+they are more likely to lose their place in line.
